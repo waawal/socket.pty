@@ -6,6 +6,6 @@ Pseudo Terminal Sessions over Socket.io
 
 ## Environment Variables ##
 
-PORT
+**PORT**  
   Port to bind the server.  
   Default 8080
