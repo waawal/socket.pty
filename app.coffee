@@ -1,30 +1,28 @@
-io = require "socket.io"
-pty = require "pty.js"
+server = require('http').Server()
+io = require('socket.io')(server)
+pty = require 'pty.js'
 
-io = io.listen(server)
 io.configure ->
-  io.disable "log"
+  io.disable 'log'
 
-io.sockets.on "connection", (socket) ->
-  # New client connected
+io.sockets.on 'connection', (socket) ->
 
-  term = pty.fork process.env.SHELL or "sh", [],
-    name: "xterm"
+  term = pty.fork process.env.SHELL or 'sh', [],
+    name: 'xterm'
     cols: 80
     rows: 24
     cwd: process.env.HOME
 
-  term.on "data", (data) ->
-    socket.emit("data", data)
+  # Sending data to the client.
+  term.on 'data', (data) ->
+    socket.emit('data', data)
 
-  #term.on 'exit', ->
-  #  noop
+  term.on 'exit', ->
+    socket.disconnect()
 
-  #console.log "" + "Created shell with pty master/slave" + " pair (master: %d, pid: %d)", term.fd, term.pid
-
-
-  socket.on "data", (data) ->
+  # Processing data from the client.
+  socket.on 'data', (data) ->
     term.write data
 
-  socket.on "disconnect", ->
+  socket.on 'disconnect', ->
     term.destroy()
