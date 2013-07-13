@@ -1,6 +1,6 @@
 # socket.pty #
 
-Pseudo Terminal Sessions over Socket.io
+Pseudo Terminal Sessions Over Socket.io
 
 ----
 
