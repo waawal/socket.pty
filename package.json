@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "",
-  "author": "Daniel Waardal"
+  "author": "Daniel Waardal",
+  "dependencies": {
+    "socket.io": "~0.9.16",
+    "pty.js": "~0.2.2",
+    "coffee-script": "~1.6.3"
+  }
 }
