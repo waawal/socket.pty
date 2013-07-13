@@ -15,7 +15,7 @@ io.sockets.on 'connection', (client) ->
 
   # Sending data to the client.
   terminal.on 'data', (data) ->
-    client.emit('data', data)
+    client.emit 'data', data
 
   terminal.on 'exit', ->
     client.disconnect()
