@@ -3,26 +3,29 @@ io = require('socket.io')(server)
 pty = require 'pty.js'
 
 io.configure ->
-  io.disable 'log'
+  io.disable 'log', 'browser client', 'match origin protocol'
 
-io.sockets.on 'connection', (socket) ->
+io.sockets.on 'connection', (client) ->
 
-  term = pty.fork process.env.SHELL or 'sh', [],
+  terminal = pty.fork process.env.SHELL or 'sh', [],
     name: 'xterm'
     cols: 80
     rows: 24
     cwd: process.env.HOME
 
   # Sending data to the client.
-  term.on 'data', (data) ->
-    socket.emit('data', data)
+  terminal.on 'data', (data) ->
+    client.emit('data', data)
 
-  term.on 'exit', ->
-    socket.disconnect()
+  terminal.on 'exit', ->
+    client.disconnect()
 
   # Processing data from the client.
-  socket.on 'data', (data) ->
-    term.write data
+  client.on 'data', (data) ->
+    terminal.write data
 
-  socket.on 'disconnect', ->
-    term.destroy()
+  client.on 'disconnect', ->
+    terminal.destroy()
+
+
+server.listen Number(process.env.PORT) or 8080
