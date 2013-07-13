@@ -1,5 +1,5 @@
-server = require('http').Server()
-io = require('socket.io')(server)
+exports.module = require('http').Server()
+io = require('socket.io')(exports.module)
 pty = require 'pty.js'
 
 io.configure ->
@@ -26,6 +26,3 @@ io.sockets.on 'connection', (client) ->
 
   client.on 'disconnect', ->
     terminal.destroy()
-
-
-server.listen Number(process.env.PORT) or 8080
