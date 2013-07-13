@@ -1,5 +1,4 @@
-exports.module = require('http').Server()
-io = require('socket.io')(exports.module)
+exports.module = io = require('socket.io').listen Number(process.env.PORT) or 8080
 pty = require 'pty.js'
 
 io.configure ->
