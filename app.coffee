@@ -1,17 +1,13 @@
-io = require("socket.io")
-pty = require("pty.js")
+io = require "socket.io"
+pty = require "pty.js"
 
-###
-Sockets
-###
 io = io.listen(server)
 io.configure ->
   io.disable "log"
 
 io.sockets.on "connection", (socket) ->
-# New client connected
+  # New client connected
 
-  buff = []
   term = pty.fork process.env.SHELL or "sh", [],
     name: "xterm"
     cols: 80
@@ -19,7 +15,7 @@ io.sockets.on "connection", (socket) ->
     cwd: process.env.HOME
 
   term.on "data", (data) ->
-    (if not socket then buff.push(data) else socket.emit("data", data))
+    socket.emit("data", data)
 
   #term.on 'exit', ->
   #  noop
@@ -32,7 +28,3 @@ io.sockets.on "connection", (socket) ->
 
   socket.on "disconnect", ->
     term.destroy()
-
-  socket.emit "data", buff.shift() while buff.length
-
-  
