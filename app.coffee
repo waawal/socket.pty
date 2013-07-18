@@ -7,7 +7,7 @@ io.configure ->
 
 io.sockets.on 'connection', (client) ->
   unless client.pty
-    client.pty = ptyjs.fork 'docker', ['run', '-i', '-t', '-m=4194304', '-u=user', 'waawal/browser'],
+    client.pty = ptyjs.fork 'docker', ['run', '-i', '-t', '-m=4194304', '-u=1111', 'waawal/browser'],
       rows: 24
       cols: 80
       name: 'xterm'
