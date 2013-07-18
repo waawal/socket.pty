@@ -3,7 +3,7 @@ ptyjs = require 'pty.js'
 
 io.configure ->
   io.disable 'logging', 'match origin protocol'
-  io.set('close timeout', 10)
+  io.set('close timeout', 30)
 
 io.sockets.on 'connection', (client) ->
   unless client.pty
