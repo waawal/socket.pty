@@ -9,6 +9,8 @@ io.sockets.on 'connection', (client) ->
   unless client.pty
     client.pty = ptyjs.fork 'docker', ['run', '-i', '-t', '-m=4194304', '-u=user', 'waawal/browser'],
       rows: 24
+      cols: 80
+      name: 'xterm'
       cwd: process.env.HOME
 
     # Sending data to the client.
