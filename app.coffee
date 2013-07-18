@@ -1,27 +1,27 @@
-exports.module = io = require('socket.io').listen Number(process.env.PORT) or 8080
-pty = require 'pty.js'
+exports.module = io = require('socket.io').listen Number(process.env.PORT) or 8888
+ptyjs = require 'pty.js'
 
 io.configure ->
-  io.disable 'log', 'browser client', 'match origin protocol'
+  io.disable 'logging', 'match origin protocol'
+  io.set('close timeout', 10)
 
 io.sockets.on 'connection', (client) ->
+  unless client.pty
+    client.pty = ptyjs.fork 'docker', ['run', '-i', '-t', '-m=4194304', 'waawal/browser'],
+      rows: 24
+      cwd: process.env.HOME
 
-  terminal = pty.fork process.env.SHELL or 'sh', [],
-    name: 'xterm'
-    cols: 80
-    rows: 24
-    cwd: process.env.HOME
+    # Sending data to the client.
+    client.pty.on 'data', (data) ->
+      client.emit 'data', data
 
-  # Sending data to the client.
-  terminal.on 'data', (data) ->
-    client.emit 'data', data
+    client.pty.on 'exit', ->
+      client.disconnect()
 
-  terminal.on 'exit', ->
-    client.disconnect()
+    # Processing data from the client.
+    client.on 'data', (data) ->
+      client.pty.write data
 
-  # Processing data from the client.
-  client.on 'data', (data) ->
-    terminal.write data
-
-  client.on 'disconnect', ->
-    terminal.destroy()
+    client.on 'disconnect', ->
+      client.pty.end('\u0004')
+      client.pty.destroy()
