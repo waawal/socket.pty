@@ -1,6 +1,6 @@
 # socket.pty #
 
-Pseudo Terminal Sessions Over Socket.io
+Simple Pseudo Terminal Sessions Over Socket.io
 
 ----
 
@@ -9,3 +9,9 @@ Pseudo Terminal Sessions Over Socket.io
 **PORT**  
   *Port to bind the server.*  
   Default: 8080
+
+
+**COMMAND**
+
+  *Command to execute*
+  Default: /bin/sh
